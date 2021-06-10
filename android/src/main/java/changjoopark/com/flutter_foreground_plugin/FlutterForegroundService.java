@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.core.app.NotificationCompat;
+import android.app.Notification.Builder;
 
 
 public class FlutterForegroundService extends Service {
@@ -52,15 +52,25 @@ public class FlutterForegroundService extends Service {
                     ((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
                             .createNotificationChannel(channel);
                 }
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(getNotificationIcon(bundle.getString("icon")))
-                        .setColor(bundle.getInt("color"))
-                        .setContentTitle(bundle.getString("title"))
-                        .setContentText(bundle.getString("content"))
-                        .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                        .setContentIntent(pendingIntent)
-                        .setUsesChronometer(bundle.getBoolean("chronometer"))
-                        .setOngoing(true);
+                Notification notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(bundle.getString("title"))
+                .setContentText(bundle.getString("content"))
+                .setSmallIcon(getNotificationIcon(bundle.getString("icon")))                    
+                .setColor(bundle.getInt("color"))
+                .setColorized(true)
+                .setContentIntent(pendingIntent)
+                .build();
+                
+//                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+//                         .setSmallIcon(getNotificationIcon(bundle.getString("icon")))
+//                         .setColor(bundle.getInt("color"))
+//                         .setContentTitle(bundle.getString("title"))
+//                         .setContentText(bundle.getString("content"))
+//                         .setCategory(NotificationCompat.CATEGORY_SERVICE)
+//                         .setContentIntent(
+//                 )
+//                         .setUsesChronometer(bundle.getBoolean("chronometer"))
+//                         .setOngoing(true);
 
                 if (bundle.getBoolean("stop_action")) {
                     Intent stopSelf = new Intent(this, FlutterForegroundService.class);
@@ -68,16 +78,17 @@ public class FlutterForegroundService extends Service {
 
                     PendingIntent pStopSelf = PendingIntent
                             .getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
-                    builder.addAction(getNotificationIcon(bundle.getString("stop_icon")),
-                            bundle.getString("stop_text"),
-                            pStopSelf);
+//                     builder.addAction(getNotificationIcon(bundle.getString("stop_icon")),
+//                             bundle.getString("stop_text"),
+//                             pStopSelf);
                 }
 
-                if (bundle.getString("subtext") != null && !bundle.getString("subtext").isEmpty()) {
-                    builder.setSubText(bundle.getString("subtext"));
-                }
+//                 if (bundle.getString("subtext") != null && !bundle.getString("subtext").isEmpty()) {
+//                     builder.setSubText(bundle.getString("subtext"));
+//                 }
 
-                startForeground(ONGOING_NOTIFICATION_ID, builder.build());
+//                 startForeground(ONGOING_NOTIFICATION_ID, builder.build());
+                startForeground(ONGOING_NOTIFICATION_ID, notification);
                 break;
             case FlutterForegroundPlugin.STOP_FOREGROUND_ACTION:
                 stopFlutterForegroundService();
