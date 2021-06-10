@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import android.app.Notification.Builder;
+import android.app.Notification;
 
 
 public class FlutterForegroundService extends Service {
@@ -59,6 +59,7 @@ public class FlutterForegroundService extends Service {
                 .setColor(bundle.getInt("color"))
                 .setColorized(true)
                 .setContentIntent(pendingIntent)
+                .setPriority(Notification.PRIORITY_MAX)
                 .build();
                 
 //                 NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
