@@ -39,13 +39,8 @@ public class FlutterForegroundService extends Service {
             case FlutterForegroundPlugin.START_FOREGROUND_ACTION:
                 PackageManager pm = getApplicationContext().getPackageManager();
                 Intent notificationIntent = pm.getLaunchIntentForPackage(getApplicationContext().getPackageName());
-                PendingIntent pendingIntent = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                    pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
-                } else {
-                    pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
-                }
-
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        
                 Bundle bundle = intent.getExtras();
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -82,7 +77,7 @@ public class FlutterForegroundService extends Service {
                     stopSelf.setAction(ACTION_STOP_SERVICE);
 
                     PendingIntent pStopSelf = PendingIntent
-                            .getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT);
+                            .getService(this, 0, stopSelf, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 //                     builder.addAction(getNotificationIcon(bundle.getString("stop_icon")),
 //                             bundle.getString("stop_text"),
 //                             pStopSelf);
